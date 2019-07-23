@@ -5,14 +5,17 @@ import API from "../utils/API";
 import { Link } from "react-router-dom";
 import { Col, Row, Container } from "../components/Grid";
 import { List, ListItem } from "../components/List";
-import { Input, TextArea, FormBtn } from "../components/Form";
+import { Input, TextArea, FormBtn, SearchBtn } from "../components/Form";
 
 class Books extends Component {
   state = {
     books: [],
     title: "",
     author: "",
-    synopsis: ""
+    description: "",
+    image: "",
+    link: "",
+    bookResults: []
   };
 
   componentDidMount() {
@@ -22,7 +25,7 @@ class Books extends Component {
   loadBooks = () => {
     API.getBooks()
       .then(res =>
-        this.setState({ books: res.data, title: "", author: "", synopsis: "" })
+        this.setState({ books: res.data, title: "", author: "", description: "" , image: "", link: "" })
       )
       .catch(err => console.log(err));
   };
@@ -46,11 +49,21 @@ class Books extends Component {
       API.saveBook({
         title: this.state.title,
         author: this.state.author,
-        synopsis: this.state.synopsis
+        description: this.state.description
       })
         .then(res => this.loadBooks())
         .catch(err => console.log(err));
     }
+  };
+
+  handleSearch = event => {
+    event.preventDefault();
+    API.searchBook(this.state.title)
+      .then(res => {
+        this.setState({ bookResults: res });
+        // console.log(this.state.bookResults);
+      })
+      .catch(err => console.log(err));
   };
 
   render() {
@@ -59,7 +72,7 @@ class Books extends Component {
         <Row>
           <Col size="md-6">
             <Jumbotron>
-              <h1>What Books Should I Read?</h1>
+              <h1>Search for Books</h1>
             </Jumbotron>
             <form>
               <Input
@@ -68,29 +81,21 @@ class Books extends Component {
                 name="title"
                 placeholder="Title (required)"
               />
-              <Input
-                value={this.state.author}
-                onChange={this.handleInputChange}
-                name="author"
-                placeholder="Author (required)"
-              />
-              <TextArea
-                value={this.state.synopsis}
-                onChange={this.handleInputChange}
-                name="synopsis"
-                placeholder="Synopsis (Optional)"
-              />
-              <FormBtn
-                disabled={!(this.state.author && this.state.title)}
-                onClick={this.handleFormSubmit}
-              >
-                Submit Book
-              </FormBtn>
+              <SearchBtn id="search-button"onClick={this.handleSearch}>Search</SearchBtn>
+
+                {this.state.bookResults.data ? (
+                  this.state.bookResults.data.items.map(thing => (
+                    <resItem>
+                      <h6>{thing.volumeInfo.title} by {thing.volumeInfo.authors}</h6>
+                      <FormBtn onClick={this.handleFormSubmit}>Save Book</FormBtn>
+                    </resItem>
+                  ))
+                ) : (<h6>Search results will go here..</h6>)}
             </form>
           </Col>
           <Col size="md-6 sm-12">
             <Jumbotron>
-              <h1>Books On My List</h1>
+              <h1>Saved Books</h1>
             </Jumbotron>
             {this.state.books.length ? (
               <List>

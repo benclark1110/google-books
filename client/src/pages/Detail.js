@@ -23,7 +23,7 @@ class Detail extends Component {
           <Col size="md-12">
             <Jumbotron>
               <h1>
-                {this.state.book.title} by {this.state.book.author}
+                {this.state.book.title} by {this.state.book.authors}
               </h1>
             </Jumbotron>
           </Col>
@@ -31,11 +31,13 @@ class Detail extends Component {
         <Row>
           <Col size="md-10 md-offset-1">
             <article>
-              <h1>Synopsis</h1>
+              <h1>Description</h1>
               <p>
-                {this.state.book.synopsis}
+                {this.state.book.description}
               </p>
             </article>
+            <img src={this.state.book.image}></img>
+            <a href={this.state.book.link}>{this.state.book.link}</a>
           </Col>
         </Row>
         <Row>

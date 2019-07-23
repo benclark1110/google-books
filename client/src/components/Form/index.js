@@ -25,3 +25,11 @@ export function FormBtn(props) {
     </button>
   );
 }
+
+export function SearchBtn(props) {
+  return (
+    <button {...props} style={{ marginBottom: 5 }} className="btn btn-primary  btn-sm">
+      {props.children}
+    </button>
+  )
+}
