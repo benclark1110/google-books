@@ -14,7 +14,7 @@ function App() {
         <Nav />
         <Switch>
           <Route exact path="/" component={Search} key={Books.title}/>
-          <Route exact path="/books" component={Saved} key={Books.title}/>
+          <Route exact path="/saved" component={Saved} key={Books.title}/>
           <Route component={NoMatch} key={Books.title}/>
         </Switch>
       </div>
